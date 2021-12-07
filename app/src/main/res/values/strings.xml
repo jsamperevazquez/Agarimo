@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Agarimo</string>
+    <string name="botonSignIn">Sign In</string>
+    <string name="entryMail">Enter your mail</string>
+    <string name="entryPass">Password</string>
+    <string name="forgotPassword">Forgot password?</string>
+    <string name="firstName">Name</string>
+    <string name="lastName">Last name</string>
+    <string name="login">Init session</string>
+    <string name="createAct">Sign Up</string>
 </resources>
