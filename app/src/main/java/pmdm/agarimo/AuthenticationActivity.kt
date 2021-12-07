@@ -1,6 +1,7 @@
 package pmdm.agarimo
 
 import android.app.ProgressDialog
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -8,6 +9,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_auth.*
 import kotlin.properties.Delegates
@@ -41,8 +43,12 @@ class AuthenticationActivity : AppCompatActivity() {
         butSup = buttonSingIn
         auth = FirebaseAuth.getInstance()
     }
+
     // Iniciar sesión con firebase
     private fun loginUser() {
+        // Creamos una variable e instanciamos un objeto intent al que pasamos nuestra Activity localitation
+        val intentLocation = Intent(this, LocalitationActivity::class.java)
+
         // Obtenemos usuario y contraseña
         email = etEmail.text.toString()
         password = etPassword.text.toString()
@@ -62,8 +68,8 @@ class AuthenticationActivity : AppCompatActivity() {
                         applicationContext,
                         "Wellcome to Agarimo",
                         Toast.LENGTH_SHORT
-                    )
-                    // todo
+                    ).show()
+                    startActivity(intentLocation)
                 } else {
                     // Sacamos toast
                     Toast.makeText(
