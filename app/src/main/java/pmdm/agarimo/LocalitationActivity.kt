@@ -3,6 +3,8 @@ package pmdm.agarimo
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -12,11 +14,15 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.activity_localitation.*
+import java.io.IOException
 import kotlin.properties.Delegates
 
 class LocalitationActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -47,7 +53,6 @@ class LocalitationActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.fragmentMap) as SupportMapFragment
         mapFragment.getMapAsync(this) //la inicializamos con la función getMapAsync(this).
     }
-
 
 
     // Función para comprobar permiso de localización
@@ -127,5 +132,43 @@ class LocalitationActivity : AppCompatActivity(), OnMapReadyCallback {
                 Toast.LENGTH_SHORT
             ).show()
         }
+    }
+
+    // Método para buscar dirección proporcionada por usuario
+
+    public fun searchStreet(view: View) {
+        var street = streetSearch.text.toString().trim() // recojo el valor introducido por el usuario
+        var addresList: List<Address>? = null // creo una lista de Address
+
+        if (street == null || street == "") { // Si el entry está vacío
+            Toast.makeText(applicationContext, "Provide location please", Toast.LENGTH_LONG).show()
+        }else{
+            val geoCoder = Geocoder(this) // geocoder para convertir la latitud y la longitud en información de dirección detallada
+            try {
+                addresList = geoCoder.getFromLocationName(street,1) //Asigno a mi lista de Address geocoder para cambiar dirección a latitud y locngitud
+
+            }catch (e: IOException){
+                e.printStackTrace()
+            }
+
+            val address = addresList!![0] // Creo una dirección y le asigno el valor Address de mi único valor de la lista
+            val latLng = LatLng(address.latitude,address.longitude) // Recojo la latitud y longitud de mi dirección
+
+            // Creo una marca en el mapa con la latitud y longitud recogida y como título la calle
+            map.addMarker(MarkerOptions().position(latLng).title(street))
+
+            // Creo una animación de Cámara con un UpdateFactory para hacer zoom a la latitud y longitud pasadas
+            map.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+
+
+            /*PERMISOS REQUERIDOS EN MANIFEST:
+                android.permission.ACCESS_FINE_LOCATION
+                android.permission.ACCESS_COARSE_LOCATION
+                android.permission.INTERNET
+             */
+
+        }
+
+
     }
 }

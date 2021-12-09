@@ -8,4 +8,6 @@
     <string name="lastName">Last name</string>
     <string name="login">Init session</string>
     <string name="createAct">Sign Up</string>
+    <string name="StreetSearch"></string>
+    <string name="searchButton"></string>
 </resources>
