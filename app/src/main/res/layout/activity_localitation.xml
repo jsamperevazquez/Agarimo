@@ -21,7 +21,6 @@
         android:id="@+id/streetSearch"
         android:layout_width="236dp"
         android:layout_height="48dp"
-        android:autofillHints=""
         android:ems="10"
         android:inputType="textPostalAddress"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -31,7 +30,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.016"
-        tools:ignore="SpeakableTextPresentCheck" />
+        tools:ignore="SpeakableTextPresentCheck"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/searchButton"
