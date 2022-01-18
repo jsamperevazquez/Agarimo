@@ -44,7 +44,7 @@ class LocalitationActivity : AppCompatActivity(), OnMapReadyCallback {
         viewModel = ViewModelProvider(this).get(ProfesionalsViewModel::class.java)
         createMapFragment() // LLama a la función que inicializa el fragmento de layout
         val button: Button = findViewById(R.id.profButton)
-        button.setOnClickListener { getResponseProfesionals()}
+        button.setOnClickListener { getResponseProfesionals() }
         val connectedRef = Firebase.database.getReference(".info/connected")
         connectedRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -206,25 +206,39 @@ class LocalitationActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-
     fun getResponseProfesionals() {
         viewModel.responseLiveData.observe(this, {
-            printResults(it)
+            markResults(it)
         })
 
     }
 
-    private fun printResults(response: Response) {
+    private fun markResults(response: Response) {
+        var lat = 0.00
+        var long = 0.00
+        var profesionalMark = LatLng(0.00, 0.00)
         response.profesionals?.let { profesionals ->
             profesionals.forEach { profesional ->
                 profesional.lat?.let {
-                    Log.d("Bd",it.toString())
+                    lat = it
                 }
+                profesional.long?.let {
+                    long = it
+                }
+                profesionalMark = LatLng(lat, long)
+                map.addMarker(
+                    MarkerOptions().position(profesionalMark).title("Professional")
+                )
+                map.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(profesionalMark, 18f),
+                    4000,
+                    null
+                )
             }
         }
         response.exception?.let { exception ->
             exception.message?.let {
-                Toast.makeText(applicationContext, it,Toast.LENGTH_SHORT)
+                Toast.makeText(applicationContext, it, Toast.LENGTH_SHORT)
             }
         }
     }
