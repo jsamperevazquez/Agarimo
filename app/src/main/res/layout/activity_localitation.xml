@@ -49,6 +49,19 @@
         app:layout_constraintStart_toEndOf="@+id/streetSearch"
         app:layout_constraintTop_toTopOf="@+id/fragmentMap"
         app:layout_constraintVertical_bias="0.0"
-        tools:ignore="SpeakableTextPresentCheck" />
+        tools:ignore="SpeakableTextPresentCheck,UsingOnClickInXml" />
+
+    <Button
+        android:id="@+id/profButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/profButton"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentMap"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/streetSearch"
+        app:layout_constraintVertical_bias="0.891"
+        tools:ignore="OnClick,UsingOnClickInXml" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
