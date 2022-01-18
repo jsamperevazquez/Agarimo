@@ -1,29 +1,32 @@
 package pmdm.agarimo
 
 import android.annotation.SuppressLint
-import android.app.ProgressDialog
+import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_localitation.*
 import java.io.IOException
-import kotlin.properties.Delegates
 
 class LocalitationActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -31,11 +34,33 @@ class LocalitationActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
     private lateinit var mark: MarkerOptions
 
+    // Base de datos (Usar modelo)
+    private lateinit var viewModel: ProfesionalsViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_localitation)
+        viewModel = ViewModelProvider(this).get(ProfesionalsViewModel::class.java)
         createMapFragment() // LLama a la función que inicializa el fragmento de layout
+        val button: Button = findViewById(R.id.profButton)
+        button.setOnClickListener { getResponseProfesionals()}
+        val connectedRef = Firebase.database.getReference(".info/connected")
+        connectedRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val connected = snapshot.getValue(Boolean::class.java) ?: false
+                if (connected) {
+                    Log.d(TAG, "CONECTADO COÑO")
+                } else {
+                    Log.d(TAG, "not connected")
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.w(TAG, "Listener was cancelled")
+            }
+        })
+
     }
 
 
@@ -137,22 +162,31 @@ class LocalitationActivity : AppCompatActivity(), OnMapReadyCallback {
     // Método para buscar dirección proporcionada por usuario
 
     public fun searchStreet(view: View) {
-        var street = streetSearch.text.toString().trim() // recojo el valor introducido por el usuario
+        var street =
+            streetSearch.text.toString().trim() // recojo el valor introducido por el usuario
         var addresList: List<Address>? = null // creo una lista de Address
 
         if (street == null || street == "") { // Si el entry está vacío
             Toast.makeText(applicationContext, "Provide location please", Toast.LENGTH_LONG).show()
-        }else{
-            val geoCoder = Geocoder(this) // geocoder para convertir la latitud y la longitud en información de dirección detallada
+        } else {
+            val geoCoder =
+                Geocoder(this) // geocoder para convertir la latitud y la longitud en información de dirección detallada
             try {
-                addresList = geoCoder.getFromLocationName(street,1) //Asigno a mi lista de Address geocoder para cambiar dirección a latitud y locngitud
+                addresList = geoCoder.getFromLocationName(
+                    street,
+                    1
+                ) //Asigno a mi lista de Address geocoder para cambiar dirección a latitud y locngitud
 
-            }catch (e: IOException){
+            } catch (e: IOException) {
                 e.printStackTrace()
             }
 
-            val address = addresList!![0] // Creo una dirección y le asigno el valor Address de mi único valor de la lista
-            val latLng = LatLng(address.latitude,address.longitude) // Recojo la latitud y longitud de mi dirección
+            val address =
+                addresList!![0] // Creo una dirección y le asigno el valor Address de mi único valor de la lista
+            val latLng = LatLng(
+                address.latitude,
+                address.longitude
+            ) // Recojo la latitud y longitud de mi dirección
 
             // Creo una marca en el mapa con la latitud y longitud recogida y como título la calle
             map.addMarker(MarkerOptions().position(latLng).title(street))
@@ -167,8 +201,32 @@ class LocalitationActivity : AppCompatActivity(), OnMapReadyCallback {
                 android.permission.INTERNET
              */
 
-        }
 
+        }
+    }
+
+
+
+    fun getResponseProfesionals() {
+        viewModel.responseLiveData.observe(this, {
+            printResults(it)
+        })
 
     }
+
+    private fun printResults(response: Response) {
+        response.profesionals?.let { profesionals ->
+            profesionals.forEach { profesional ->
+                profesional.lat?.let {
+                    Log.d("Bd",it.toString())
+                }
+            }
+        }
+        response.exception?.let { exception ->
+            exception.message?.let {
+                Toast.makeText(applicationContext, it,Toast.LENGTH_SHORT)
+            }
+        }
+    }
 }
+
