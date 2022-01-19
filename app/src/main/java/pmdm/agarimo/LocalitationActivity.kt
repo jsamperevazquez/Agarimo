@@ -1,15 +1,12 @@
 package pmdm.agarimo
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -18,14 +15,15 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_localitation.*
+import pmdm.agarimo.controller.Response
+import pmdm.agarimo.view.ProfessionalsViewModel
 import java.io.IOException
 
 class LocalitationActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -35,22 +33,24 @@ class LocalitationActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mark: MarkerOptions
 
     // Base de datos (Usar modelo)
-    private lateinit var viewModel: ProfesionalsViewModel
+    private lateinit var viewModel: ProfessionalsViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_localitation)
-        viewModel = ViewModelProvider(this).get(ProfesionalsViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(ProfessionalsViewModel::class.java)
         createMapFragment() // LLama a la función que inicializa el fragmento de layout
-        val button: Button = findViewById(R.id.profButton)
-        button.setOnClickListener { getResponseProfesionals() }
+        profButton.setOnClickListener { getResponseProfessionals() } //disparador para llamar a la funcion de respuesta
+
         val connectedRef = Firebase.database.getReference(".info/connected")
+        /*
+        Metodo para saber estado de conexión con BD Firebase
         connectedRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val connected = snapshot.getValue(Boolean::class.java) ?: false
                 if (connected) {
-                    Log.d(TAG, "CONECTADO COÑO")
+                    Log.d(TAG, "CONNECTED")
                 } else {
                     Log.d(TAG, "not connected")
                 }
@@ -60,7 +60,7 @@ class LocalitationActivity : AppCompatActivity(), OnMapReadyCallback {
                 Log.w(TAG, "Listener was cancelled")
             }
         })
-
+         */
     }
 
 
@@ -206,39 +206,43 @@ class LocalitationActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-    fun getResponseProfesionals() {
+    private fun getResponseProfessionals() { //
         viewModel.responseLiveData.observe(this, {
-            markResults(it)
+            markProfessionals(it)
         })
 
     }
 
-    private fun markResults(response: Response) {
+    // Método para marcar posición de los profesionales, en función de su latitud y longitud (datos de realTime):
+    private fun markProfessionals(response: Response) {
+        val icon: BitmapDescriptor =
+            BitmapDescriptorFactory.fromResource(R.drawable.hospitalicon) //Icono para pasarle a mark maps
         var lat = 0.00
         var long = 0.00
         var profesionalMark = LatLng(0.00, 0.00)
-        response.profesionals?.let { profesionals ->
-            profesionals.forEach { profesional ->
+        response.professionals?.let { profesionals -> // Para cada lista de profeesionales haz:
+            profesionals.forEach { profesional -> // Para cada profesional:
                 profesional.lat?.let {
                     lat = it
                 }
                 profesional.long?.let {
                     long = it
                 }
-                profesionalMark = LatLng(lat, long)
-                map.addMarker(
-                    MarkerOptions().position(profesionalMark).title("Professional")
+                profesionalMark =
+                    LatLng(lat, long) // Pasamos la latitud y longitud recogida de cada profesional
+                map.addMarker( // Añadimos marcas en el mapa
+                    MarkerOptions().position(profesionalMark).title("Professional").icon(icon)
                 )
-                map.animateCamera(
-                    CameraUpdateFactory.newLatLngZoom(profesionalMark, 18f),
+                map.animateCamera( // Damos una animación de zoom a marcas
+                    CameraUpdateFactory.newLatLngZoom(profesionalMark, 14f),
                     4000,
                     null
                 )
             }
         }
-        response.exception?.let { exception ->
+        response.exception?.let { exception -> // Si recibe una excepción como respuesta
             exception.message?.let {
-                Toast.makeText(applicationContext, it, Toast.LENGTH_SHORT)
+                Toast.makeText(applicationContext, it, Toast.LENGTH_SHORT) // La mostramos con Toast
             }
         }
     }
