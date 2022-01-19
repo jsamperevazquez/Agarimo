@@ -1,6 +1,6 @@
-package pmdm.agarimo
+package pmdm.agarimo.entity
 
-data class Profesional(
+data class Professional(
     var lat: Double? = null,
     var long: Double? = null
 )
