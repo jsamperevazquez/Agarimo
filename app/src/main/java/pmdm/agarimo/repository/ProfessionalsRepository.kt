@@ -1,7 +1,7 @@
 package pmdm.agarimo.repository
 
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import android.util.Log
+import com.google.firebase.database.*
 import kotlinx.coroutines.tasks.await
 import pmdm.agarimo.controller.Response
 import pmdm.agarimo.entity.Professional
@@ -12,15 +12,23 @@ class ProfessionalsRepository(
     private val agarimo: DatabaseReference = FirebaseDatabase.getInstance("https://agarimoapp-default-rtdb.europe-west1.firebasedatabase.app").reference,
     private val professionalRef: DatabaseReference = agarimo.child("profesionales")
 ) {
-    //Función suspend para poder usar corutinas
-     suspend fun dataConnect(): Response {
-
-         val response = Response() // Instancio un Response() para poder usar patrón diseño
+    //Función para mapear la devolución de ref a fireBase a clase Profesional
+     fun dataConnect(): Response {
+        val response = Response() // Instancio un Response() para poder usar patrón diseño
          try {
-             // Obtenemos la datos de nuestra referncia a BD con get de forma asíncrona con await y mapeamos:
-             response.professionals = professionalRef.get().await().children.map { snapshot ->
-                 snapshot.getValue(Professional::class.java)!!
+             val profListener = object : ValueEventListener{
+                 override fun onDataChange(snapshot: DataSnapshot) {
+                  response.professionals = snapshot.children.map { snapshot ->
+                      snapshot.getValue(Professional::class.java)!!
+                  }
+                 }
+
+                 override fun onCancelled(error: DatabaseError) {
+                     Log.w("BD", error.message)
+                 }
              }
+             professionalRef.addValueEventListener(profListener)
+
          }catch (ex: Exception){
              response.exception = ex
          }
