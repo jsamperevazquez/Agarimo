@@ -53,8 +53,8 @@ class AuthenticationActivity : AppCompatActivity() {
         password = etPassword.text.toString()
 
         // Verificamos que los campos no están vacíos
-        if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && password.length >= 6) {
 
+        if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && password.length < 6) {
 
             // Iniciamos sesion con el método sigIn y enviamos usuario y contraseña
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {
@@ -69,19 +69,15 @@ class AuthenticationActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                     startActivity(intentLocation)
+                    finish() // Ya no queremos cargar esta activity al presionar atrás
                 } else {
-                    // Sacamos toast
-                    Toast.makeText(
-                        applicationContext,
-                        "Authentication failed  $email",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    // si no es correcto mostramos error a través de error que proporciona material
+                    editTextTextEmailAddress.error = getText(R.string.emailError)
+                    editTextTextPassword.error = getText(R.string.passWordError)
                 }
             }
-
         } else
             Toast.makeText(this, "Enter all details", Toast.LENGTH_SHORT).show()
-
     }
 
     fun login(view: View) {

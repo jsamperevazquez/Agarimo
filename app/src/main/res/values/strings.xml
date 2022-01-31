@@ -11,4 +11,6 @@
     <string name="StreetSearch"></string>
     <string name="searchButton"></string>
     <string name="profButton">Help</string>
+    <string name="emailError">Password or Email incorrect </string>
+    <string name="passWordError">Password or Email incorrect</string>
 </resources>

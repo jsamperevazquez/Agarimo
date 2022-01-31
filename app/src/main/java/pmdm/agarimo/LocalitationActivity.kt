@@ -35,7 +35,6 @@ class LocalitationActivity : AppCompatActivity(), OnMapReadyCallback {
     // Base de datos (Usar modelo)
     private lateinit var viewModel: ProfessionalsViewModel
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_localitation)
@@ -207,9 +206,9 @@ class LocalitationActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     private fun getResponseProfessionals() { //
-        viewModel.responseLiveData.observe(this, {
+        viewModel.responseLiveData.observe(this) {
             markProfessionals(it)
-        })
+        }
 
     }
 
@@ -231,7 +230,7 @@ class LocalitationActivity : AppCompatActivity(), OnMapReadyCallback {
                 profesionalMark =
                     LatLng(lat, long) // Pasamos la latitud y longitud recogida de cada profesional
                 map.addMarker( // Añadimos marcas en el mapa
-                    MarkerOptions().position(profesionalMark).title("Professional").icon(icon)
+                    MarkerOptions().position(profesionalMark).title(profesional.toString()).icon(icon)
                 )
                 map.animateCamera( // Damos una animación de zoom a marcas
                     CameraUpdateFactory.newLatLngZoom(profesionalMark, 14f),
