@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_auth.*
+import kotlinx.android.synthetic.main.activity_registration.*
 import kotlin.properties.Delegates
 
 class AuthenticationActivity : AppCompatActivity() {
@@ -21,6 +22,7 @@ class AuthenticationActivity : AppCompatActivity() {
     private var email by Delegates.notNull<String>()
     private var password by Delegates.notNull<String>()
     private lateinit var etEmail: EditText
+    private lateinit var butSin: Button
     private lateinit var butSup: Button
     private lateinit var etPassword: EditText
     private lateinit var mProgressBar: ProgressDialog
@@ -31,7 +33,9 @@ class AuthenticationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
         initialise()
-
+        butSup.setOnClickListener {
+            loadRegister()
+        }
     }
 
     //Método para inicializar nuestros elementos de diseño y autenticación de FireBase
@@ -39,7 +43,8 @@ class AuthenticationActivity : AppCompatActivity() {
         etEmail = editTextTextEmailAddress
         etPassword = editTextTextPassword
         mProgressBar = ProgressDialog(this)
-        butSup = buttonSingIn
+        butSin = buttonSingIn
+        butSup = buttonSignUp
         auth = FirebaseAuth.getInstance()
     }
 
@@ -54,7 +59,7 @@ class AuthenticationActivity : AppCompatActivity() {
 
         // Verificamos que los campos no están vacíos
 
-        if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && password.length < 6) {
+        if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && password.length >= 6) {
 
             // Iniciamos sesion con el método sigIn y enviamos usuario y contraseña
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {
@@ -69,7 +74,7 @@ class AuthenticationActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                     startActivity(intentLocation)
-                    finish() // Ya no queremos cargar esta activity al presionar atrás
+                    finish() //Ya no carga esta activity al dar atras el usuario
                 } else {
                     // si no es correcto mostramos error a través de error que proporciona material
                     editTextTextEmailAddress.error = getText(R.string.emailError)
@@ -78,6 +83,11 @@ class AuthenticationActivity : AppCompatActivity() {
             }
         } else
             Toast.makeText(this, "Enter all details", Toast.LENGTH_SHORT).show()
+    }
+
+    fun loadRegister() {
+        val registerIntent = Intent(this, RegistrationActivity::class.java)
+        startActivity(registerIntent)
     }
 
     fun login(view: View) {

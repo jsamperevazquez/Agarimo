@@ -53,7 +53,7 @@
         android:onClick="login"/>
 
     <Button
-        android:id="@+id/create"
+        android:id="@+id/buttonSignUp"
         android:layout_width="120dp"
         android:layout_height="62dp"
         android:text="@string/createAct"

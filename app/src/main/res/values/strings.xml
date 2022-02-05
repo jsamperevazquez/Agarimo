@@ -13,4 +13,9 @@
     <string name="profButton">Help</string>
     <string name="emailError">Password or Email incorrect </string>
     <string name="passWordError">Password or Email incorrect</string>
+    <string name="regname">Name</string>
+    <string name="regLastName">Last name</string>
+    <string name="regPhone">Phone</string>
+    <string name="regAddress">Address</string>
+    <string name="regButton">Register</string>
 </resources>
