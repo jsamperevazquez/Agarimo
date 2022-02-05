@@ -3,9 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="pmdm.agarimo"
     tools:ignore="CoarseFineLocation">
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -13,13 +15,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Agarimo">
+        <activity
+            android:name=".RegistrationActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
         <activity
             android:name=".LocalitationActivity"
             android:exported="false" />
-
         <activity
             android:name=".AuthenticationActivity"
             android:exported="true">
@@ -30,4 +36,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>
