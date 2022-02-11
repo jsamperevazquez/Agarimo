@@ -2,6 +2,7 @@ package pmdm.agarimo
 
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
 import androidx.appcompat.app.AppCompatActivity
@@ -15,10 +16,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_localitation.*
@@ -31,6 +29,7 @@ class LocalitationActivity : AppCompatActivity(), OnMapReadyCallback {
     //Localización Mapa
     private lateinit var map: GoogleMap
     private lateinit var mark: MarkerOptions
+    private lateinit var circle: Circle
 
     // Base de datos (Usar modelo)
     private lateinit var viewModel: ProfessionalsViewModel
@@ -229,9 +228,8 @@ class LocalitationActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
                 profesionalMark =
                     LatLng(lat, long) // Pasamos la latitud y longitud recogida de cada profesional
-                map.addMarker( // Añadimos marcas en el mapa
-                    MarkerOptions().position(profesionalMark).title(profesional.toString()).icon(icon)
-                )
+                map.addCircle(CircleOptions().center(profesionalMark).radius(500.0).strokeColor(Color.YELLOW).fillColor(Color.WHITE).clickable(true))
+
                 map.animateCamera( // Damos una animación de zoom a marcas
                     CameraUpdateFactory.newLatLngZoom(profesionalMark, 14f),
                     4000,

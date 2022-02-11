@@ -7,25 +7,26 @@
     tools:context=".RegistrationActivity">
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/phoneInput"
+        android:id="@+id/passInput"
         android:layout_width="159dp"
         android:layout_height="46dp"
         android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="@+id/regPhone"
-        app:layout_constraintEnd_toEndOf="@+id/addressInput"
-        app:layout_constraintStart_toStartOf="@+id/addressInput"
-        app:layout_constraintTop_toTopOf="@+id/regPhone"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toBottomOf="@+id/regPass"
+        app:layout_constraintEnd_toEndOf="@+id/emailInput"
+        app:layout_constraintStart_toStartOf="@+id/emailInput"
+        app:layout_constraintTop_toTopOf="@+id/regPass"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
-        android:id="@+id/regPhone"
+        android:id="@+id/regPass"
         android:layout_width="149dp"
         android:layout_height="38dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="300dp"
         android:layout_marginEnd="33dp"
         android:paddingTop="15dp"
-        android:text="@string/regPhone"
+        android:text="@string/regPass"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@+id/regName"
         app:layout_constraintHorizontal_bias="0.205"
@@ -33,25 +34,26 @@
         app:layout_constraintTop_toBottomOf="@+id/regName" />
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/addressInput"
+        android:id="@+id/emailInput"
         android:layout_width="154dp"
         android:layout_height="50dp"
         android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="@+id/regAddress"
+        android:inputType="textEmailAddress"
+        app:layout_constraintBottom_toBottomOf="@+id/regEmail"
         app:layout_constraintEnd_toEndOf="@+id/lastNameInput"
         app:layout_constraintStart_toStartOf="@+id/lastNameInput"
-        app:layout_constraintTop_toTopOf="@+id/regAddress"
+        app:layout_constraintTop_toTopOf="@+id/regEmail"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
-        android:id="@+id/regAddress"
+        android:id="@+id/regEmail"
         android:layout_width="149dp"
         android:layout_height="38dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="200dp"
         android:layout_marginEnd="33dp"
         android:paddingTop="15dp"
-        android:text="@string/regAddress"
+        android:text="@string/regEmail"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@+id/regName"
         app:layout_constraintHorizontal_bias="0.153"
@@ -110,6 +112,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/nameInput"
         android:layout_width="155dp"
         android:layout_height="50dp"
         android:textAlignment="center"

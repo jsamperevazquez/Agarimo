@@ -15,7 +15,7 @@
     <string name="passWordError">Password or Email incorrect</string>
     <string name="regname">Name</string>
     <string name="regLastName">Last name</string>
-    <string name="regPhone">Phone</string>
-    <string name="regAddress">Address</string>
+    <string name="regPass">Password</string>
+    <string name="regEmail">Email</string>
     <string name="regButton">Register</string>
 </resources>
