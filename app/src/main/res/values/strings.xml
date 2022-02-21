@@ -18,4 +18,7 @@
     <string name="regPass">Password</string>
     <string name="regEmail">Email</string>
     <string name="regButton">Register</string>
+    <string name="profLab">Professional</string>
+    <string name="cliLab">Client</string>
+    <string name="choseLab">Choose option</string>
 </resources>

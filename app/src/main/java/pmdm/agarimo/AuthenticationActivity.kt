@@ -86,7 +86,7 @@ class AuthenticationActivity : AppCompatActivity() {
     }
 
     fun loadRegister() {
-        val registerIntent = Intent(this, RegistrationActivity::class.java)
+        val registerIntent = Intent(this, SelectActivity::class.java)
         startActivity(registerIntent)
     }
 
