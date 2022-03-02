@@ -21,4 +21,8 @@
     <string name="profLab">Professional</string>
     <string name="cliLab">Client</string>
     <string name="choseLab">Choose option</string>
+    <string name="title_activity_navigator">Navigator</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>
